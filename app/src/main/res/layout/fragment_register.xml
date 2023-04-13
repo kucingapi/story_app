@@ -8,13 +8,16 @@
     android:orientation="vertical"
     tools:context=".ui.fragment.RegisterFragment">
 
-    <TextView
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Register"
+        android:layout_height="250dp"
+        android:background="@drawable/rounded_corner"
+        android:clipToOutline="true"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:textSize="32sp"
+        android:src="@drawable/story_register"
+        android:scaleType="centerCrop"
         />
 
     <EditText
@@ -48,12 +51,20 @@
         />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/registerButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:text="Register" />
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Login" />
 
 </LinearLayout>
