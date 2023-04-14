@@ -9,7 +9,7 @@
     tools:context=".ui.fragment.RegisterFragment">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/heroImage"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@drawable/rounded_corner"
@@ -18,6 +18,7 @@
         android:layout_marginEnd="16dp"
         android:src="@drawable/story_register"
         android:scaleType="centerCrop"
+        android:alpha="0"
         />
 
     <EditText
@@ -29,24 +30,28 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
+        android:alpha="0"
         android:inputType="text" />
 
     <EditText
-        android:id="@+id/editTextTextEmailAddress"
+        android:id="@+id/editTextEmailAddress"
         android:hint="@string/email"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
+        android:alpha="0"
         android:inputType="textEmailAddress" />
 
 
     <com.example.storyapp.ui.view.PasswordEditText
+        android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
+        android:alpha="0"
         android:layout_marginEnd="16dp"
         />
 
@@ -56,6 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
+        android:alpha="0"
         android:layout_marginEnd="16dp"
         android:text="Register" />
     <Button
@@ -65,6 +71,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:alpha="0"
         android:text="Login" />
 
 </LinearLayout>
