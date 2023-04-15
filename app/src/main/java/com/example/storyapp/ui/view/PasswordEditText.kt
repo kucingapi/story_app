@@ -32,7 +32,7 @@ class PasswordEditText: AppCompatEditText, View.OnTouchListener {
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (s.toString().length <= 8) setError("test")
+                if (s.toString().length < 8) setError("Minimal Character Is 8")
                 else setError(null)
 
             }
@@ -47,8 +47,6 @@ class PasswordEditText: AppCompatEditText, View.OnTouchListener {
         super.onDraw(canvas)
         hint = "Password"
     }
-
-
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         return true

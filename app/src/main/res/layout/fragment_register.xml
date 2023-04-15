@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".ui.fragment.RegisterFragment">
+    tools:context=".ui.fragment.register.RegisterFragment">
 
     <ImageView
         android:id="@+id/heroImage"
