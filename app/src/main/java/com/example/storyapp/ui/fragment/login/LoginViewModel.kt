@@ -24,6 +24,11 @@ class LoginViewModel @Inject constructor(
             val requestLogin = RequestLogin( "novelbafagih09@gmail.com", "123456789")
             dataRepository.doLogin(requestLogin).collect{
                 resultLiveData.postValue(it)
+                it.data?.loginResult?.let { it1 ->
+                    run {
+                        dataRepository.saveToken(it1.token)
+                    }
+                }
             }
         }
     }

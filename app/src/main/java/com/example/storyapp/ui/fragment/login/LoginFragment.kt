@@ -1,5 +1,6 @@
 package com.example.storyapp.ui.fragment.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.storyapp.data.Resource
 import com.example.storyapp.data.api.login.ResponseLogin
 import com.example.storyapp.databinding.FragmentLoginBinding
+import com.example.storyapp.ui.activity.StoryActivity
 import com.example.storyapp.util.AnimatorUtil
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -75,6 +77,8 @@ class LoginFragment : Fragment() {
                     return
                 }
                 Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(requireActivity(), StoryActivity::class.java))
+                requireActivity().finish()
             }
             is Resource.DataError -> {
                 Toast.makeText(requireContext(), "error", Toast.LENGTH_SHORT).show()

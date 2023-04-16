@@ -3,7 +3,9 @@ package com.example.storyapp.ui.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.storyapp.databinding.ActivityStoryBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class StoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStoryBinding
     override fun onCreate(savedInstanceState: Bundle?) {
