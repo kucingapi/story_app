@@ -1,8 +1,6 @@
 package com.example.storyapp.ui.fragment.register
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -77,13 +75,18 @@ class RegisterFragment : Fragment() {
 
     private fun handleRegisterResult(status: Resource<ResponseRegister>) {
         when (status) {
-            is Resource.Loading -> Log.d("handleRegisterResult", "loading")
             is Resource.Success -> status.data?.let {
-                Log.d("handleRegisterResult", "$it")
+                if(it.error){
+                    Toast.makeText(requireContext(), "error", Toast.LENGTH_SHORT).show()
+                    return
+                }
+                findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment())
+                Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
             }
             is Resource.DataError -> {
-                Log.d("handleRegisterResult", "error")
+                Toast.makeText(requireContext(), "error", Toast.LENGTH_SHORT).show()
             }
+            else -> Toast.makeText(requireContext(), "Loading", Toast.LENGTH_SHORT).show()
         }
     }
 

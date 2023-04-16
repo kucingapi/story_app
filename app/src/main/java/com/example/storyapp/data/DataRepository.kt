@@ -1,32 +1,53 @@
 package com.example.storyapp.data
 
-import androidx.lifecycle.MutableLiveData
-import com.example.storyapp.data.api.ApiConfig.apiService
 import com.example.storyapp.data.api.ApiService
+import com.example.storyapp.data.api.login.RequestLogin
+import com.example.storyapp.data.api.login.ResponseLogin
 import com.example.storyapp.data.api.register.RequestRegister
 import com.example.storyapp.data.api.register.ResponseRegister
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import retrofit2.awaitResponse
 import javax.inject.Inject
 
-class DataRepository : DataRepositorySource {
-    override fun doRegister(requestRegister: RequestRegister): MutableLiveData<Resource<ResponseRegister>> {
-        val resultLiveData = MutableLiveData<Resource<ResponseRegister>>()
-        val client = apiService.register(requestRegister)
-        client.enqueue(object : Callback<ResponseRegister> {
-            override fun onResponse(call: Call<ResponseRegister>, response: Response<ResponseRegister>) {
-                if (response.isSuccessful) {
-                    resultLiveData.postValue(Resource.Success(response.body() as ResponseRegister))
-                }
+class DataRepository @Inject constructor(private val apiService: ApiService) : DataRepositorySource {
+    override suspend fun doRegister(requestRegister: RequestRegister): Flow<Resource<ResponseRegister>> {
+        return flow {
+            emit(Resource.Loading())
+            val response = apiService.register(requestRegister)
+            response.awaitResponse().run {
+                if(isSuccessful)
+                    emit(Resource.Success(body()!!))
+                else
+                    emit(Resource.DataError(code()))
             }
+        }
+    }
 
-            override fun onFailure(call: Call<ResponseRegister>, t: Throwable) {
-                resultLiveData.postValue(Resource.DataError(t.hashCode()))
+    override suspend fun doLogin(requestLogin: RequestLogin): Flow<Resource<ResponseLogin>> {
+        return flow {
+            emit(Resource.Loading())
+            val response = apiService.login(requestLogin)
+            response.awaitResponse().run {
+                if(isSuccessful)
+                    emit(Resource.Success(body()!!))
+                else
+                    emit(Resource.DataError(code()))
             }
-        })
-        return resultLiveData
+        }
+//        val resultLiveData = MutableLiveData<Resource<ResponseLogin>>()
+//        val client = ApiConfig.apiService.login(requestLogin)
+//        client.enqueue(object : Callback<ResponseLogin> {
+//            override fun onResponse(call: Call<ResponseLogin>, response: Response<ResponseLogin>) {
+//                if (response.isSuccessful) {
+//                    resultLiveData.postValue(Resource.Success(response.body() as ResponseLogin))
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<ResponseLogin>, t: Throwable) {
+//                resultLiveData.postValue(Resource.DataError(t.hashCode()))
+//            }
+//        })
+//        return resultLiveData
     }
 }

@@ -1,10 +1,12 @@
 package com.example.storyapp.data
 
-import androidx.lifecycle.MutableLiveData
+import com.example.storyapp.data.api.login.RequestLogin
+import com.example.storyapp.data.api.login.ResponseLogin
 import com.example.storyapp.data.api.register.RequestRegister
 import com.example.storyapp.data.api.register.ResponseRegister
 import kotlinx.coroutines.flow.Flow
 
 interface DataRepositorySource {
-    fun doRegister(requestRegister: RequestRegister): MutableLiveData<Resource<ResponseRegister>>
+    suspend fun doRegister(requestRegister: RequestRegister): Flow<Resource<ResponseRegister>>
+    suspend fun doLogin(requestLogin: RequestLogin): Flow<Resource<ResponseLogin>>
 }
