@@ -4,9 +4,13 @@ import com.example.storyapp.data.api.login.RequestLogin
 import com.example.storyapp.data.api.login.ResponseLogin
 import com.example.storyapp.data.api.register.RequestRegister
 import com.example.storyapp.data.api.register.ResponseRegister
+import com.example.storyapp.data.api.stories.ResponseStories
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ApiService {
     @POST("register")
@@ -14,4 +18,12 @@ interface ApiService {
 
     @POST("login")
     fun login(@Body requestLogin: RequestLogin): Call<ResponseLogin>
+
+    @GET("stories")
+    fun getStories(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int = 1,
+        @Query("size") size: Int = 10,
+        @Query("location") location: Int = 0
+    ): Call<ResponseStories>
 }
