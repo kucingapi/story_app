@@ -17,6 +17,13 @@ class LoginInformation @Inject constructor(val context: Context, val sharedPref:
         }
     }
 
+    fun deleteToken(){
+        with(sharedPref.edit()) {
+            remove(KEY_PREFERENCES_LOGIN_INFORMATION)
+            commit()
+        }
+    }
+
     fun getToken(): String{
         return sharedPref.getString(KEY_PREFERENCES_LOGIN_INFORMATION, "") ?: ""
     }

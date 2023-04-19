@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.example.storyapp.data.local.LoginInformation
 import com.example.storyapp.databinding.ActivityAuthBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,7 +24,10 @@ class AuthActivity : AppCompatActivity() {
 
     private fun checkLoggedIn() {
         val token = sharedPref.getString(LoginInformation.KEY_PREFERENCES_LOGIN_INFORMATION, "")
+        Log.d("token", "$token")
         token?.let {
+            if(token.isEmpty())
+                return
             val intent = Intent(this, StoryActivity::class.java)
             startActivity(intent)
             finish()

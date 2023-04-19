@@ -14,4 +14,5 @@ interface DataRepositorySource {
     suspend fun doRegister(requestRegister: RequestRegister): Flow<Resource<ResponseRegister>>
     suspend fun doLogin(requestLogin: RequestLogin): Flow<Resource<ResponseLogin>>
     fun saveToken(token: String)
+    fun deleteToken()
 }

@@ -68,6 +68,10 @@ class DataRepository @Inject constructor(private val apiService: ApiService, pri
         }
     }
 
+    override fun deleteToken() {
+        loginInformation.deleteToken()
+    }
+
     override fun saveToken(token: String) {
         loginInformation.saveToken(token)
     }
