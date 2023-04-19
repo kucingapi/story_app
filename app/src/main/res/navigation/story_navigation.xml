@@ -16,6 +16,9 @@
             <argument
                 android:name="id" />
         </action>
+        <action
+            android:id="@+id/action_storiesFragment_to_addStoryFragment"
+            app:destination="@id/addStoryFragment2" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
@@ -25,4 +28,8 @@
             android:name="id"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/addStoryFragment2"
+        android:name="com.example.storyapp.ui.fragment.addstory.AddStoryFragment"
+        android:label="AddStoryFragment" />
 </navigation>

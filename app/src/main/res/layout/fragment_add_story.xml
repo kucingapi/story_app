@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    >
+
+    <ImageView
+        android:id="@+id/iv_item_photo"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/rounded_corner"
+        android:clipToOutline="true"
+        tools:srcCompat="@tools:sample/avatars"
+        android:scaleType="centerCrop"
+        />
+    <!-- File foto input, bisa dari kamera -->
+    <Button
+        android:id="@+id/button_add_photo_camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Photo"/>
+    <Button
+        android:id="@+id/button_add_photo_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="gallery"/>
+
+    <!-- Deskripsi cerita input -->
+    <EditText
+        android:id="@+id/ed_add_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:lines="8"
+        android:maxLines="10"
+        android:minLines="6"
+        android:hint="Story Description"/>
+
+    <!-- Tombol untuk upload data ke server -->
+    <Button
+        android:id="@+id/button_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Upload"/>
+
+</LinearLayout>
