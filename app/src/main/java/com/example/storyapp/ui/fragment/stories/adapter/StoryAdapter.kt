@@ -14,12 +14,13 @@ class StoryAdapter(private val context: Context,private var stories: List<Story>
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
         val itemBinding =
             ItemStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
         return StoryViewHolder(context,itemBinding)
     }
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val story = stories[position]
-        holder.bind(story.name, story.photoUrl)
+        holder.bind(story.name, story.photoUrl, story.id)
     }
 
     override fun getItemCount(): Int {

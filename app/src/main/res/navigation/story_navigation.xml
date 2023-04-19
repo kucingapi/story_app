@@ -9,5 +9,20 @@
         android:id="@+id/storiesFragment"
         android:name="com.example.storyapp.ui.fragment.stories.StoriesFragment"
         android:label="fragment_stories"
-        tools:layout="@layout/fragment_stories" />
+        tools:layout="@layout/fragment_stories" >
+        <action
+            android:id="@+id/action_storiesFragment_to_detailFragment"
+            app:destination="@id/detailFragment" >
+            <argument
+                android:name="id" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.example.storyapp.ui.fragment.detail.DetailFragment"
+        android:label="DetailFragment" >
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
 </navigation>

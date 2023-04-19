@@ -6,6 +6,7 @@ import com.example.storyapp.data.api.login.ResponseLogin
 import com.example.storyapp.data.api.register.RequestRegister
 import com.example.storyapp.data.api.register.ResponseRegister
 import com.example.storyapp.data.api.stories.ResponseStories
+import com.example.storyapp.data.api.story.ResponseDetail
 import com.example.storyapp.data.local.LoginInformation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,6 +19,20 @@ class DataRepository @Inject constructor(private val apiService: ApiService, pri
             emit(Resource.Loading())
             val bearerToken = "Bearer ${loginInformation.getToken()}"
             val response = apiService.getStories(token = bearerToken)
+            response.awaitResponse().run {
+                if(isSuccessful)
+                    emit(Resource.Success(body()!!))
+                else
+                    emit(Resource.DataError(code()))
+            }
+        }
+    }
+
+    override suspend fun getStoryById(id: String): Flow<Resource<ResponseDetail>> {
+        return flow{
+            emit(Resource.Loading())
+            val bearerToken = "Bearer ${loginInformation.getToken()}"
+            val response = apiService.getStoryById(bearerToken, id)
             response.awaitResponse().run {
                 if(isSuccessful)
                     emit(Resource.Success(body()!!))
