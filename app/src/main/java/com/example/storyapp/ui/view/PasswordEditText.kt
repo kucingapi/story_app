@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -26,7 +27,7 @@ class PasswordEditText: AppCompatEditText, View.OnTouchListener {
     }
 
     private fun init() {
-        // Menambahkan aksi ketika ada perubahan text akan memunculkan clear button
+        inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
         addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }
