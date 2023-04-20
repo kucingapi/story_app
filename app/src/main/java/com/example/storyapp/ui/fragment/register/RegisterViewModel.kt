@@ -18,10 +18,10 @@ class RegisterViewModel @Inject constructor(private val dataRepository: DataRepo
         MutableLiveData<Resource<ResponseRegister>>()
     }
 
-    fun register(){
+    fun register(name: String , email: String, password: String){
         viewModelScope.launch {
             val requestRegister =
-                RequestRegister("novel bafagih", "novelbafagih09@gmail.com", "123456789")
+                RequestRegister(name, email, password)
             dataRepository.doRegister(requestRegister).collect {
                 resultLiveData.postValue(it)
             }

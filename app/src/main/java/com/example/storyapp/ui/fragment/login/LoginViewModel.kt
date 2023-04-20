@@ -19,9 +19,9 @@ class LoginViewModel @Inject constructor(
         MutableLiveData<Resource<ResponseLogin>>()
     }
 
-    fun login(){
+    fun login(email: String, password: String){
         viewModelScope.launch {
-            val requestLogin = RequestLogin( "novelbafagih09@gmail.com", "123456789")
+            val requestLogin = RequestLogin( email, password)
             dataRepository.doLogin(requestLogin).collect{
                 resultLiveData.postValue(it)
                 it.data?.loginResult?.let { it1 ->

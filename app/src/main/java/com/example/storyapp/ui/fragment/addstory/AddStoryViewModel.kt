@@ -1,15 +1,20 @@
 package com.example.storyapp.ui.fragment.addstory
 
 import android.content.ContentResolver
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
 import android.os.Environment
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.storyapp.data.DataRepository
+import com.example.storyapp.data.Resource
+import com.example.storyapp.data.api.story.ResponsePostStory
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -19,13 +24,24 @@ import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class AddStoryViewModel @Inject constructor(): ViewModel() {
+class AddStoryViewModel @Inject constructor(private val dataRepository: DataRepository): ViewModel() {
     private val FILENAME_FORMAT = "dd-MMM-yyyy"
+    val resultLiveData: MutableLiveData<Resource<ResponsePostStory>> by lazy {
+        MutableLiveData<Resource<ResponsePostStory>>()
+    }
 
     val timeStamp: String = SimpleDateFormat(
         FILENAME_FORMAT,
         Locale.US
     ).format(System.currentTimeMillis())
+
+    fun postStory(description: String, file: File) {
+        viewModelScope.launch {
+            dataRepository.postStory(description, file).collect {
+                resultLiveData.postValue(it)
+            }
+        }
+    }
 
     fun rotateFile(file: File, isBackCamera: Boolean = false) {
         val matrix = Matrix()

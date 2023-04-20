@@ -12,9 +12,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
+import com.example.storyapp.data.Resource
+import com.example.storyapp.data.api.story.ResponsePostStory
 import com.example.storyapp.databinding.FragmentAddStoryBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -24,6 +27,7 @@ class AddStoryFragment : Fragment() {
     private lateinit var binding: FragmentAddStoryBinding
     private val viewModel: AddStoryViewModel by viewModels()
     private lateinit var currentPhotoPath: String
+    private lateinit var imageSelected: File
 
     private val launcherIntentCamera = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -31,6 +35,7 @@ class AddStoryFragment : Fragment() {
         val myFile = File(currentPhotoPath)
 
         myFile.let { file ->
+            imageSelected = file
             viewModel.rotateFile(file, true)
             binding.ivItemPhoto.setImageBitmap(BitmapFactory.decodeFile(file.path))
         }
@@ -44,6 +49,7 @@ class AddStoryFragment : Fragment() {
             selectedImg.let { uri ->
                 val myFile = viewModel.uriToFile(uri, this)
                 myFile?.let{
+                    imageSelected = it
                     binding.ivItemPhoto.setImageURI(uri)
                 }
             }
@@ -56,6 +62,7 @@ class AddStoryFragment : Fragment() {
     ): View {
         binding = FragmentAddStoryBinding.inflate(inflater, container, false)
         setUpAction()
+        observeViewModel()
         return binding.root
     }
 
@@ -65,6 +72,9 @@ class AddStoryFragment : Fragment() {
         }
         binding.buttonAddPhotoGallery.setOnClickListener {
             startGallery()
+        }
+        binding.buttonAdd.setOnClickListener {
+            viewModel.postStory(binding.edAddDescription.text.toString(), imageSelected)
         }
     }
 
@@ -91,4 +101,27 @@ class AddStoryFragment : Fragment() {
         val chooser = Intent.createChooser(intent, "Choose a Picture")
         launcherIntentGallery.launch(chooser)
     }
+
+    private fun observeViewModel() {
+        viewModel.resultLiveData.observe(viewLifecycleOwner) {
+            handleResponsePost(it)
+        }
+    }
+
+    private fun handleResponsePost(status: Resource<ResponsePostStory>) {
+        when (status) {
+            is Resource.Success -> status.data?.let {
+                if(it.error){
+                    Toast.makeText(requireContext(), "error", Toast.LENGTH_SHORT).show()
+                    return
+                }
+                Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+            }
+            is Resource.DataError -> {
+                Toast.makeText(requireContext(), "error", Toast.LENGTH_SHORT).show()
+            }
+            else -> Toast.makeText(requireContext(), "Loading", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 }

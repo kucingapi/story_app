@@ -2,7 +2,6 @@ package com.example.storyapp.ui.view
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -27,7 +26,7 @@ class PasswordEditText: AppCompatEditText, View.OnTouchListener {
     }
 
     private fun init() {
-        inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
+        inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT
         addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }

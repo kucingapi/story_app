@@ -58,7 +58,7 @@ class RegisterFragment : Fragment() {
                 Toast.makeText(requireContext(), "Minimal Character is 8", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            viewModel.register()
+            viewModel.register(name, email, password)
             Log.d("setActionRegister", "setAction: $name $email $password")
         }
         binding.loginButton.setOnClickListener {
