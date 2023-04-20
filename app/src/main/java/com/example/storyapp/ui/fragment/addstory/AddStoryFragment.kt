@@ -1,9 +1,11 @@
 package com.example.storyapp.ui.fragment.addstory
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.Intent.ACTION_GET_CONTENT
+import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
@@ -14,12 +16,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.storyapp.data.Resource
 import com.example.storyapp.data.api.story.ResponsePostStory
 import com.example.storyapp.databinding.FragmentAddStoryBinding
 import dagger.hilt.android.AndroidEntryPoint
+import id.zelory.compressor.Compressor
+import id.zelory.compressor.constraint.size
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 
 @AndroidEntryPoint
@@ -28,6 +37,8 @@ class AddStoryFragment : Fragment() {
     private val viewModel: AddStoryViewModel by viewModels()
     private lateinit var currentPhotoPath: String
     private lateinit var imageSelected: File
+    private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+    private val REQUEST_CODE_PERMISSIONS = 10
 
     private val launcherIntentCamera = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -35,7 +46,10 @@ class AddStoryFragment : Fragment() {
         val myFile = File(currentPhotoPath)
 
         myFile.let { file ->
-            imageSelected = file
+            lifecycleScope.launch {
+                val compressedImageFile = Compressor.compress(requireContext(), file, Dispatchers.Main)
+                imageSelected = compressedImageFile
+            }
             viewModel.rotateFile(file, true)
             binding.ivItemPhoto.setImageBitmap(BitmapFactory.decodeFile(file.path))
         }
@@ -49,7 +63,12 @@ class AddStoryFragment : Fragment() {
             selectedImg.let { uri ->
                 val myFile = viewModel.uriToFile(uri, this)
                 myFile?.let{
-                    imageSelected = it
+                    lifecycleScope.launch {
+                        val compressedImageFile = Compressor.compress(requireContext(), it, Dispatchers.Main) {
+                            size(1_048_575)
+                        }
+                        imageSelected = compressedImageFile
+                    }
                     binding.ivItemPhoto.setImageURI(uri)
                 }
             }
@@ -62,8 +81,34 @@ class AddStoryFragment : Fragment() {
     ): View {
         binding = FragmentAddStoryBinding.inflate(inflater, container, false)
         setUpAction()
+        if (!allPermissionsGranted()) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                REQUIRED_PERMISSIONS,
+                REQUEST_CODE_PERMISSIONS
+            )
+        }
         observeViewModel()
         return binding.root
+    }
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CODE_PERMISSIONS) {
+            if (!allPermissionsGranted()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Tidak mendapatkan permission.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun setUpAction() {
