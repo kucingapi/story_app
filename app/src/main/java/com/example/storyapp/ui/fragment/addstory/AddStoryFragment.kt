@@ -21,6 +21,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.storyapp.data.Resource
 import com.example.storyapp.data.api.story.ResponsePostStory
 import com.example.storyapp.databinding.FragmentAddStoryBinding
@@ -43,15 +45,21 @@ class AddStoryFragment : Fragment() {
     private val launcherIntentCamera = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
-        val myFile = File(currentPhotoPath)
+        if (it.resultCode == RESULT_OK) {
+            val myFile = File(currentPhotoPath)
 
-        myFile.let { file ->
-            lifecycleScope.launch {
-                val compressedImageFile = Compressor.compress(requireContext(), file, Dispatchers.Main)
-                imageSelected = compressedImageFile
+            myFile.let { file ->
+                lifecycleScope.launch {
+                    val compressedImageFile =
+                        Compressor.compress(requireContext(), file, Dispatchers.Main)
+                    imageSelected = compressedImageFile
+                }
+                viewModel.rotateFile(file, true)
+                binding.ivItemPhoto.setImageBitmap(BitmapFactory.decodeFile(file.path))
             }
-            viewModel.rotateFile(file, true)
-            binding.ivItemPhoto.setImageBitmap(BitmapFactory.decodeFile(file.path))
+        }
+        else{
+            Toast.makeText(requireContext(), "Make sure to take the picture", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -72,6 +80,9 @@ class AddStoryFragment : Fragment() {
                     binding.ivItemPhoto.setImageURI(uri)
                 }
             }
+        }
+        else{
+            Toast.makeText(requireContext(), "Make sure to select a picture", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -161,6 +172,8 @@ class AddStoryFragment : Fragment() {
                     return
                 }
                 Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+                val destination = AddStoryFragmentDirections.actionAddStoryFragment2ToStoriesFragment()
+                findNavController().navigate(destination)
             }
             is Resource.DataError -> {
                 Toast.makeText(requireContext(), "error", Toast.LENGTH_SHORT).show()

@@ -34,7 +34,6 @@ class PasswordEditText: AppCompatEditText, View.OnTouchListener {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.toString().length < 8) setError("Minimal Character Is 8")
                 else setError(null)
-
             }
 
             override fun afterTextChanged(s: Editable?) {
