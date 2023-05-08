@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_storiesFragment_to_addStoryFragment"
             app:destination="@id/addStoryFragment2" />
+        <action
+            android:id="@+id/action_storiesFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
@@ -36,4 +39,9 @@
             android:id="@+id/action_addStoryFragment2_to_storiesFragment"
             app:destination="@id/storiesFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.example.storyapp.ui.fragment.maps.MapsFragment"
+        android:label="fragment_maps"
+        tools:layout="@layout/fragment_maps" />
 </navigation>

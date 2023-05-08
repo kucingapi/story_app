@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.navigation.findNavController
 import com.example.storyapp.R
 import com.example.storyapp.data.DataRepository
 import com.example.storyapp.databinding.ActivityStoryBinding
+import com.example.storyapp.ui.fragment.stories.StoriesFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

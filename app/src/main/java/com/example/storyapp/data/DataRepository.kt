@@ -41,11 +41,11 @@ class DataRepository @Inject constructor(private val apiService: ApiService, pri
         }
     }
 
-    override suspend fun getStories(): Flow<Resource<ResponseStories>> {
+    override suspend fun getStories(location: Int): Flow<Resource<ResponseStories>> {
         return flow{
             emit(Resource.Loading())
             val bearerToken = "Bearer ${loginInformation.getToken()}"
-            val response = apiService.getStories(token = bearerToken)
+            val response = apiService.getStories(token = bearerToken, null, null, location)
             response.awaitResponse().run {
                 if(isSuccessful)
                     emit(Resource.Success(body()!!))

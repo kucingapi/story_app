@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
+    android:orientation="vertical"
     tools:context=".ui.activity.StoryActivity">
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainerView"
             android:name="androidx.navigation.fragment.NavHostFragment"
@@ -13,4 +16,5 @@
             android:layout_weight="1"
             app:defaultNavHost="true"
             app:navGraph="@navigation/story_navigation" />
+
 </LinearLayout>

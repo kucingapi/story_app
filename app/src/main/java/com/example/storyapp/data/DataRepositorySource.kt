@@ -12,7 +12,7 @@ import java.io.File
 
 interface DataRepositorySource {
     suspend fun postStory(description: String, fileImage: File): Flow<Resource<ResponsePostStory>>
-    suspend fun getStories(): Flow<Resource<ResponseStories>>
+    suspend fun getStories(location: Int = 0): Flow<Resource<ResponseStories>>
     suspend fun getStoryById(id: String): Flow<Resource<ResponseDetail>>
     suspend fun doRegister(requestRegister: RequestRegister): Flow<Resource<ResponseRegister>>
     suspend fun doLogin(requestLogin: RequestLogin): Flow<Resource<ResponseLogin>>
