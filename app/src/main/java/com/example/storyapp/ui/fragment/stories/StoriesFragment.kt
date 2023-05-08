@@ -9,7 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.R
 import com.example.storyapp.data.Resource
@@ -18,14 +21,16 @@ import com.example.storyapp.data.api.story.Story
 import com.example.storyapp.databinding.FragmentStoriesBinding
 import com.example.storyapp.ui.fragment.stories.adapter.StoryAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 
 @AndroidEntryPoint
 class StoriesFragment : Fragment() {
 
     private val viewModel: StoriesViewModel by viewModels()
     private lateinit var binding: FragmentStoriesBinding
-    private val stories = listOf<Story>()
     private lateinit var storyAdapter: StoryAdapter
+    private var itemSize: Int = 10
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,12 +43,6 @@ class StoriesFragment : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.d("StoriesFragmentResume", "onResume: ")
-        viewModel.getStories()
-    }
-
     private fun setActionButton() {
         binding.fabAddStory.setOnClickListener {
             val toAddStoryFragment =
@@ -51,37 +50,44 @@ class StoriesFragment : Fragment() {
             findNavController().navigate(toAddStoryFragment)
         }
         binding.btMap.setOnClickListener {
-            val destination = StoriesFragmentDirections.actionStoriesFragmentToMapsFragment()
+            val destination = StoriesFragmentDirections.actionStoriesFragmentToMapsFragment(itemSize)
             findNavController().navigate(destination)
         }
     }
 
     private fun setRecyclerView() {
         binding.rvStories.layoutManager = LinearLayoutManager(requireContext())
-        storyAdapter = StoryAdapter(requireContext(),stories)
+        storyAdapter = StoryAdapter(requireContext())
         binding.rvStories.adapter = storyAdapter
-    }
+        storyAdapter.addLoadStateListener { loadState ->
+            when(loadState.refresh) {
+                is LoadState.Loading -> {
+                    // Handle loading state
+                }
+                is LoadState.Error -> {
+                    // Handle error state
+                }
+                is LoadState.NotLoading -> {
+                    // Handle success state
+                    itemSize = storyAdapter.itemCount
+                }
+
+                else -> {}
+            }
+        }    }
 
     private fun observeViewModel() {
-        viewModel.getStories()
         viewModel.resultLiveData.observe(viewLifecycleOwner) {
+
+            Log.d("handleStoryResult", "handleStoryResult: test")
             handleStoryResult(it)
         }
     }
-    private fun handleStoryResult(status: Resource<ResponseStories>) {
-        when (status) {
-            is Resource.Success -> status.data?.let {
-                if(it.error){
-                    Toast.makeText(requireContext(), "error", Toast.LENGTH_SHORT).show()
-                    return
-                }
-                storyAdapter.postList(it.stories)
-                Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
-            }
-            is Resource.DataError -> {
-                Toast.makeText(requireContext(), "error", Toast.LENGTH_SHORT).show()
-            }
-            else -> Toast.makeText(requireContext(), "Loading", Toast.LENGTH_SHORT).show()
+    private fun handleStoryResult(pagingStory: PagingData<Story>) {
+        lifecycleScope.launch {
+            storyAdapter.submitData(pagingStory)
+            val snapshot = storyAdapter.snapshot()
+            Log.d("handleStoryResult", "handleStoryResult: ${snapshot.size}")
         }
     }
 }

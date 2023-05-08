@@ -1,5 +1,10 @@
 package com.example.storyapp.data
 
+import androidx.lifecycle.LiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.example.storyapp.data.api.ApiService
 import com.example.storyapp.data.api.login.RequestLogin
 import com.example.storyapp.data.api.login.ResponseLogin
@@ -8,8 +13,9 @@ import com.example.storyapp.data.api.register.ResponseRegister
 import com.example.storyapp.data.api.stories.ResponseStories
 import com.example.storyapp.data.api.story.ResponseDetail
 import com.example.storyapp.data.api.story.ResponsePostStory
+import com.example.storyapp.data.api.story.Story
 import com.example.storyapp.data.local.LoginInformation
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.example.storyapp.data.paging.StoryPagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MediaType.Companion.toMediaType
@@ -41,11 +47,11 @@ class DataRepository @Inject constructor(private val apiService: ApiService, pri
         }
     }
 
-    override suspend fun getStories(location: Int): Flow<Resource<ResponseStories>> {
+    override suspend fun getStories(location: Int, size: Int, page: Int): Flow<Resource<ResponseStories>> {
         return flow{
             emit(Resource.Loading())
             val bearerToken = "Bearer ${loginInformation.getToken()}"
-            val response = apiService.getStories(token = bearerToken, null, null, location)
+            val response = apiService.getStories(token = bearerToken, page, size, location)
             response.awaitResponse().run {
                 if(isSuccessful)
                     emit(Resource.Success(body()!!))
@@ -53,6 +59,15 @@ class DataRepository @Inject constructor(private val apiService: ApiService, pri
                     emit(Resource.DataError(code()))
             }
         }
+    }
+
+    override fun getStoriesPaging(): LiveData<PagingData<Story>> {
+        return Pager(config = PagingConfig(
+            pageSize = 5
+        ),
+            pagingSourceFactory = {
+                StoryPagingSource(this)
+            }).liveData
     }
 
     override suspend fun getStoryById(id: String): Flow<Resource<ResponseDetail>> {

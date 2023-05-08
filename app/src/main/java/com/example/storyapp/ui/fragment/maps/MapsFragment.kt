@@ -15,6 +15,7 @@ import com.example.storyapp.data.Resource
 import com.example.storyapp.data.api.stories.ResponseStories
 import com.example.storyapp.data.api.story.Story
 import com.example.storyapp.databinding.FragmentMapsBinding
+import com.example.storyapp.ui.fragment.detail.DetailFragmentArgs
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -26,16 +27,14 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MapsFragment : Fragment() {
+    private var size: Int = 10
     private lateinit var mMap: GoogleMap
     private lateinit var binding: FragmentMapsBinding
     private lateinit var mapFragment: SupportMapFragment
     private val viewModel: MapViewModel by viewModels()
 
     private var callback = OnMapReadyCallback { googleMap ->
-        val sydney = LatLng(-34.0, 151.0)
         mMap = googleMap
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
     override fun onCreateView(
@@ -51,11 +50,12 @@ class MapsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(callback)
+        size = MapsFragmentArgs.fromBundle(arguments as Bundle).size
         observeViewModel()
     }
 
     private fun observeViewModel() {
-        viewModel.getMapStory()
+        viewModel.getMapStory(size)
         viewModel.resultLiveData.observe(viewLifecycleOwner) {
             handleStoriesResult(it)
         }

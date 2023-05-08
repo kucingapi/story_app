@@ -43,5 +43,10 @@
         android:id="@+id/mapsFragment"
         android:name="com.example.storyapp.ui.fragment.maps.MapsFragment"
         android:label="fragment_maps"
-        tools:layout="@layout/fragment_maps" />
+        tools:layout="@layout/fragment_maps" >
+        <argument
+            android:name="size"
+            app:argType="integer"
+            android:defaultValue="10" />
+    </fragment>
 </navigation>

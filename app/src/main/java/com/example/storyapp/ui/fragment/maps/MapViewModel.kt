@@ -22,9 +22,9 @@ class MapViewModel @Inject constructor(
         MutableLiveData<Resource<ResponseStories>>()
     }
 
-    fun getMapStory() {
+    fun getMapStory(size: Int) {
         viewModelScope.launch {
-            dataRepository.getStories(1).collect {
+            dataRepository.getStories(1, size).collect {
                 resultLiveData.postValue(it)
             }
         }

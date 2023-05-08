@@ -7,10 +7,4 @@
         android:title="logout"
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
-    <item
-        android:id="@+id/map"
-        android:icon="@drawable/baseline_map_24"
-        android:title="logout"
-        app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="androidx.appcompat.widget.SearchView" />
 </menu>
