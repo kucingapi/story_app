@@ -16,6 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StoriesViewModel @Inject constructor(private val dataRepository: DataRepository) : ViewModel() {
-    val resultLiveData: LiveData<PagingData<Story>> =
+    fun getStoryPaging(): LiveData<PagingData<Story>> =
         dataRepository.getStoriesPaging().cachedIn(viewModelScope)
+
 }

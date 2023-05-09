@@ -60,24 +60,12 @@ class StoriesFragment : Fragment() {
         storyAdapter = StoryAdapter(requireContext())
         binding.rvStories.adapter = storyAdapter
         storyAdapter.addLoadStateListener { loadState ->
-            when(loadState.refresh) {
-                is LoadState.Loading -> {
-                    // Handle loading state
-                }
-                is LoadState.Error -> {
-                    // Handle error state
-                }
-                is LoadState.NotLoading -> {
-                    // Handle success state
-                    itemSize = storyAdapter.itemCount
-                }
-
-                else -> {}
-            }
-        }    }
+            itemSize = storyAdapter.itemCount
+        }
+    }
 
     private fun observeViewModel() {
-        viewModel.resultLiveData.observe(viewLifecycleOwner) {
+        viewModel.getStoryPaging().observe(viewLifecycleOwner) {
 
             Log.d("handleStoryResult", "handleStoryResult: test")
             handleStoryResult(it)
